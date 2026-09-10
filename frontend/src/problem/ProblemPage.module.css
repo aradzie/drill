@@ -1,0 +1,62 @@
+.root {
+  composes: shadow from "../ui/styles.module.css";
+
+  position: relative;
+
+  display: flex;
+  flex-flow: column nowrap;
+
+  inline-size: 50rem;
+  block-size: calc(100dvb - 2rem);
+  margin: 1rem auto;
+  border: 1px solid var(--border);
+}
+
+.card {
+  overflow: auto;
+  flex: 1;
+}
+
+.problem {
+  margin-block: 1rem;
+  padding-inline: 1rem;
+  text-align: center;
+}
+
+.answer {
+  margin-block: 1rem;
+  padding-inline: 1rem;
+  border-block-start: 1px solid var(--border);
+}
+
+.controls {
+  display: flex;
+  flex-flow: row nowrap;
+  border-block-start: 1px solid var(--border);
+}
+
+.button {
+  composes: focusRing from "../ui/styles.module.css";
+
+  cursor: pointer;
+
+  flex: 1;
+
+  padding: 1rem;
+
+  appearance: none;
+
+  &:focus-visible {
+    z-index: 1;
+  }
+}
+
+.button + .button {
+  border-inline-start: 1px solid var(--border);
+}
+
+.back {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+}

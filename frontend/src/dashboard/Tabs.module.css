@@ -1,0 +1,46 @@
+.root {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  border-block-end: 1px solid var(--border);
+}
+
+.tab {
+  composes: focusRing from "../ui/styles.module.css";
+
+  cursor: pointer;
+
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  padding: 0.5rem 0;
+  border: none;
+  border-block-end: 2px solid transparent;
+
+  font: inherit;
+  color: var(--text-muted);
+
+  background: none;
+
+  &:hover {
+    color: var(--accent);
+  }
+}
+
+.tab[aria-selected="true"] {
+  border-block-end-color: var(--accent);
+  color: var(--accent);
+}
+
+.count {
+  padding: 0 0.5rem;
+  border-radius: 1rem;
+  color: var(--text-muted);
+  background: var(--border);
+}
+
+.tab[aria-selected="true"] .count {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+}

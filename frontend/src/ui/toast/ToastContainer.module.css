@@ -1,0 +1,23 @@
+.root {
+  pointer-events: none;
+
+  position: fixed;
+  inset-block: auto 1rem;
+  inset-inline: 0;
+
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+
+  inline-size: auto;
+  block-size: auto;
+  margin: 0;
+  padding: 0;
+  border: none;
+
+  color: inherit;
+
+  background: none;
+}

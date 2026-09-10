@@ -1,0 +1,28 @@
+.root {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.stat {
+  composes: shadow from "../ui/styles.module.css";
+
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+
+  padding: 1rem;
+  border: 1px solid var(--border);
+}
+
+.value {
+  font-size: 2rem;
+  color: var(--accent);
+}
+
+.label {
+  font-weight: 200;
+  color: var(--text-muted);
+}

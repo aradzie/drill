@@ -1,0 +1,50 @@
+{
+  "name": "root",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Spaced-repetition app for reviewing math problems",
+  "workspaces": [
+    "shared",
+    "frontend",
+    "backend",
+    "app"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev:frontend": "npm run dev --workspace frontend",
+    "build:frontend": "npm run build --workspace frontend",
+    "dev:backend": "npm run dev --workspace backend",
+    "build:backend": "npm run build --workspace backend",
+    "build": "npm run build:frontend && npm run build:backend",
+    "typecheck": "npm run typecheck --workspace shared && npm run typecheck --workspace frontend && npm run typecheck --workspace backend",
+    "test": "npm run test --workspaces --if-present",
+    "format": "oxfmt --write .",
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix",
+    "stylelint": "stylelint 'frontend/**/*.css'",
+    "stylelint-fix": "stylelint 'frontend/**/*.css' --fix",
+    "start": "npm run start --workspace app",
+    "service:install": "npm run service:install --workspace app",
+    "service:uninstall": "npm run service:uninstall --workspace app"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.5.1",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.10.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
+    "globals": "^17.12.0",
+    "oxc-transform-react": "^0.150.0",
+    "oxfmt": "^0.68.0",
+    "oxlint": "^1.83.0",
+    "rich-assert": "^0.0.3",
+    "stylelint": "^17.15.0",
+    "stylelint-config-clean-order": "^10.0.0",
+    "stylelint-config-recommended": "^18.0.0",
+    "stylelint-order": "^8.1.1",
+    "stylelint-plugin-logical-css": "^2.1.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.70.0"
+  }
+}

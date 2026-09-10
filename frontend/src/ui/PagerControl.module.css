@@ -1,0 +1,15 @@
+.root {
+  composes: focusRing from "./styles.module.css";
+
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+
+  inline-size: fit-content;
+  margin: 1rem auto;
+}
+
+.item {
+  inline-size: 2rem;
+  text-align: center;
+}

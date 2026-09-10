@@ -1,0 +1,10 @@
+.root {
+  display: inline-block;
+
+  inline-size: 1.8rem;
+  block-size: 1.8rem;
+
+  vertical-align: middle;
+
+  fill: currentColor;
+}

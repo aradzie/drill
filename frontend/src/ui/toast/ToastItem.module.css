@@ -1,0 +1,38 @@
+.root {
+  pointer-events: auto;
+
+  position: relative;
+
+  min-inline-size: 30rem;
+  max-inline-size: calc(100vi - 2rem);
+  border: 1px solid var(--border);
+  border-inline-start: 1rem solid var(--accent);
+
+  color: var(--text);
+
+  background-color: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.message {
+  margin: 1rem 0;
+  padding: 0 1rem;
+}
+
+.close {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+}
+
+.success {
+  border-inline-start-color: var(--success);
+}
+
+.warning {
+  border-inline-start-color: var(--warning);
+}
+
+.error {
+  border-inline-start-color: var(--error);
+}

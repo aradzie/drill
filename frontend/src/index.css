@@ -1,0 +1,49 @@
+:root {
+  --text: #3a3540;
+  --text-muted: #6b6375;
+  --bg: #ffffff;
+  --border: #e5e4e7;
+  --accent: #6b3bd6;
+  --success: #2e7d32;
+  --warning: #b26a00;
+  --error: #c62828;
+  --shadow:
+    light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4)) 0 10px 15px -3px,
+    light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.25)) 0 4px 6px -2px;
+
+  font:
+    18px/1.5 "Jost",
+    sans-serif,
+    "KaTeX_Main",
+    serif;
+  color: var(--text);
+  color-scheme: light dark;
+  background: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #e5e4e7;
+    --text-muted: #9ca3af;
+    --bg: #16171d;
+    --border: #2e303a;
+    --accent: #b394f0;
+    --success: #6bcf76;
+    --warning: #f0b429;
+    --error: #f28b82;
+  }
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 700;
+}
+
+.katex {
+  user-select: none;
+}

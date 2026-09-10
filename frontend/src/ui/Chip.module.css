@@ -1,0 +1,26 @@
+.root {
+  composes: controlShell focusRing disabledControl from "./styles.module.css";
+
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  block-size: 2rem;
+  margin: 0;
+  padding: 0 1rem;
+  border-radius: 1rem;
+
+  color: var(--text);
+  text-align: center;
+
+  &:hover:not(:disabled) {
+    color: var(--accent);
+  }
+}
+
+.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}

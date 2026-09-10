@@ -1,0 +1,16 @@
+.root {
+  white-space: nowrap;
+}
+
+.item {
+  display: inline-block;
+
+  min-inline-size: 3rem;
+  padding: 0 1rem;
+  border-radius: 0.5rem;
+
+  font: inherit;
+  text-align: center;
+
+  background-color: var(--border);
+}

@@ -1,0 +1,50 @@
+import type { ClassValue } from "clsx";
+import type {
+  ElementType,
+  FocusEventHandler,
+  HTMLAttributes,
+  KeyboardEventHandler,
+  MouseEventHandler,
+  WheelEventHandler,
+} from "react";
+
+export type ClassName = ClassValue;
+
+export type DataProps = { readonly [key: `data-${string}`]: string };
+
+export type As = ElementType<HTMLAttributes<HTMLElement>>;
+
+export type Focusable = {
+  blur(): void;
+  focus(): void;
+};
+
+export type Selectable = {
+  select(): void;
+};
+
+export type FocusProps = {
+  readonly tabIndex?: number;
+  readonly disabled?: boolean;
+  readonly onFocus?: FocusEventHandler;
+  readonly onBlur?: FocusEventHandler;
+};
+
+export type MouseProps = {
+  readonly onClick?: MouseEventHandler;
+  readonly onMouseDown?: MouseEventHandler;
+  readonly onMouseUp?: MouseEventHandler;
+  readonly onMouseOver?: MouseEventHandler;
+  readonly onMouseOut?: MouseEventHandler;
+  readonly onMouseEnter?: MouseEventHandler;
+  readonly onMouseLeave?: MouseEventHandler;
+};
+
+export type WheelProps = {
+  readonly onWheel?: WheelEventHandler;
+};
+
+export type KeyboardProps = {
+  readonly onKeyDown?: KeyboardEventHandler;
+  readonly onKeyUp?: KeyboardEventHandler;
+};

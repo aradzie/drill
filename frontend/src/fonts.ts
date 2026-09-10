@@ -1,0 +1,13 @@
+import "katex/dist/katex.css";
+import "@fontsource/jost/latin-200.css";
+import "@fontsource/jost/latin-200-italic.css";
+import "@fontsource/jost/latin-400.css";
+import "@fontsource/jost/latin-400-italic.css";
+import "@fontsource/jost/latin-700.css";
+import "@fontsource/jost/latin-700-italic.css";
+import "@fontsource/jost/latin-ext-200.css";
+import "@fontsource/jost/latin-ext-200-italic.css";
+import "@fontsource/jost/latin-ext-400.css";
+import "@fontsource/jost/latin-ext-400-italic.css";
+import "@fontsource/jost/latin-ext-700.css";
+import "@fontsource/jost/latin-ext-700-italic.css";

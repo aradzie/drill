@@ -1,0 +1,14 @@
+{
+  "name": "app",
+  "version": "0.0.0",
+  "private": true,
+  "bin": {
+    "drill": "./index.js"
+  },
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "service:install": "node index.js service install --enable",
+    "service:uninstall": "node index.js service uninstall"
+  }
+}

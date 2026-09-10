@@ -1,0 +1,42 @@
+.root {
+  composes: shadow from "../ui/styles.module.css";
+
+  table-layout: auto;
+  border-spacing: 0;
+
+  inline-size: 100%;
+  margin: 1rem 0;
+  border: 1px solid var(--border);
+
+  caption {
+    padding: 0 1rem;
+
+    font-weight: 400;
+    line-height: 2rem;
+    text-align: center;
+
+    background: var(--border);
+  }
+
+  th,
+  td {
+    padding: 0 1rem;
+    font-weight: 400;
+    line-height: 2rem;
+  }
+
+  tbody tr:nth-child(odd) {
+    background: var(--border);
+  }
+}
+
+.path {
+  composes: textTruncate from "../ui/styles.module.css";
+  text-align: start;
+}
+
+.count {
+  composes: textTruncate from "../ui/styles.module.css";
+  inline-size: 1%;
+  text-align: center;
+}

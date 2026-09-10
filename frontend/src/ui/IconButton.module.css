@@ -1,0 +1,24 @@
+.root {
+  composes: controlShell focusRing disabledControl from "./styles.module.css";
+
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  inline-size: 2rem;
+  block-size: 2rem;
+  margin: 0;
+  padding: 0;
+
+  color: currentColor;
+
+  &:hover:not(:disabled) {
+    border-color: var(--accent);
+  }
+}
+
+.ghost {
+  composes: ghostControl from "./styles.module.css";
+}

@@ -1,0 +1,12 @@
+.root {
+  composes: textTruncate from "../ui/styles.module.css";
+  font-weight: 200;
+}
+
+.deck {
+  /* Empty. */
+}
+
+.tag {
+  /* Empty. */
+}

@@ -1,0 +1,49 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item {
+  cursor: pointer;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  &:has([data-disabled]) {
+    cursor: default;
+    opacity: 0.4;
+  }
+}
+
+.radio {
+  composes: focusRing from "./styles.module.css";
+
+  cursor: pointer;
+
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+
+  inline-size: 1rem;
+  block-size: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+
+  background-color: var(--bg);
+
+  &[data-state="checked"] {
+    border-color: var(--accent);
+  }
+
+  &[data-disabled] {
+    cursor: default;
+  }
+}
+
+.indicator {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 50%;
+  background-color: var(--accent);
+}

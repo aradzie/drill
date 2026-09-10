@@ -1,0 +1,19 @@
+.root {
+  composes: marginTrim from "../ui/styles.module.css";
+}
+
+.list {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  row-gap: 0.5rem;
+  column-gap: 2rem;
+  align-items: baseline;
+}
+
+.description {
+  justify-self: start;
+}
+
+.hotkey {
+  justify-self: end;
+}

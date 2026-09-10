@@ -1,0 +1,13 @@
+.root {
+  composes: controlShell focusRing disabledControl from "./styles.module.css";
+
+  cursor: pointer;
+
+  display: inline-block;
+
+  block-size: 2rem;
+  margin: 0;
+  padding: 0 0.5rem;
+
+  color: var(--text);
+}

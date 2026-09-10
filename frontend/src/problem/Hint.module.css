@@ -1,0 +1,4 @@
+.hint {
+  cursor: pointer;
+  color: var(--text-muted);
+}
