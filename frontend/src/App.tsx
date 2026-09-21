@@ -6,10 +6,8 @@ import { Header } from "./Header.tsx";
 import { ProblemPage } from "./problem/ProblemPage.tsx";
 import { SettingsPage } from "./settings/SettingsPage.tsx";
 import { StatsPage } from "./stats/StatsPage.tsx";
-import { useCopyMath } from "./ui/rich-text/useCopyMath.ts";
 
 export function App() {
-  useCopyMath();
   const [view, setView] = useState<
     | { screen: "problems" } //
     | { screen: "stats" }

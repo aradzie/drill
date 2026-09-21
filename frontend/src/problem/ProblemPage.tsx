@@ -5,6 +5,7 @@ import { hotkeys } from "../app-hotkeys.ts";
 import { useHotkey } from "../ui/hotkeys/useHotkey.ts";
 import { IconButton } from "../ui/IconButton.tsx";
 import { RichText } from "../ui/rich-text/RichText.tsx";
+import { useCopyMath } from "../ui/rich-text/useCopyMath.ts";
 import { Hint } from "./Hint.tsx";
 import { Meta } from "./Meta.tsx";
 import styles from "./ProblemPage.module.css";
@@ -24,6 +25,8 @@ export function ProblemPage({
   onGrade: (grade: Grade) => void;
   onBack: () => void;
 }) {
+  useCopyMath();
+
   const [revealed, setRevealed] = useState(false);
   const open = isOpen(state);
 
@@ -41,13 +44,13 @@ export function ProblemPage({
       <div className={styles.card}>
         <div className={styles.problem}>
           <Meta problem={problem} />
-          <RichText text={problem.body} />
+          <RichText text={problem.body} copyable />
           {problem.hint && <Hint text={problem.hint} />}
         </div>
 
         {revealed && (
           <div className={styles.answer}>
-            <RichText text={problem.answer} />
+            <RichText text={problem.answer} copyable />
           </div>
         )}
       </div>
