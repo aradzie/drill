@@ -50,7 +50,7 @@ export class NoteParser {
   #note = emptyNote();
   #inheritedType = "Basic";
   #inheritedDeck = "Default";
-  #inheritedTags = "";
+  #inheritedTags: string[] = [];
 
   constructor(state: LoadState, path: string) {
     this.#state = state;
@@ -101,15 +101,61 @@ export class NoteParser {
       : { path: this.#path, line: this.#line };
     if (note.type) this.#inheritedType = note.type.value;
     if (note.deck) this.#inheritedDeck = note.deck.value;
-    if (note.tags) this.#inheritedTags = note.tags.value;
+    if (note.tags) this.#updateTags(note.tags);
     this.#state.addNote({
       ...location,
       type: this.#inheritedType,
       deck: this.#inheritedDeck,
-      tags: this.#inheritedTags,
+      tags: [...this.#inheritedTags],
       fields: note.fields,
     });
     this.#note = emptyNote();
+  }
+
+  #updateTags(directive: ParsedProperty): void {
+    const entries = new Set<string>();
+    const additions = new Set<string>();
+    const deletions = new Set<string>();
+    const nextTags = new Set(this.#inheritedTags);
+
+    for (const part of directive.value ? directive.value.split(/\s+/) : []) {
+      if (part.startsWith("+")) {
+        const tag = part.slice(1);
+        if (tag) {
+          additions.add(tag);
+          nextTags.add(tag);
+        }
+        continue;
+      }
+
+      if (part.startsWith("-")) {
+        const tag = part.slice(1);
+        if (tag) {
+          deletions.add(tag);
+          nextTags.delete(tag);
+        }
+        continue;
+      }
+
+      entries.add(part);
+    }
+
+    if (entries.size > 0 && (additions.size > 0 || deletions.size > 0)) {
+      this.#state.addError(
+        new ParseError(this.#path, directive.line, "Cannot mix plain tags with additions or removals in '!tags:'."),
+      );
+      return;
+    }
+
+    if (entries.size === 0 && additions.size === 0 && deletions.size === 0) {
+      this.#inheritedTags = [];
+      return;
+    }
+    if (entries.size > 0) {
+      this.#inheritedTags = [...entries];
+      return;
+    }
+    this.#inheritedTags = [...nextTags];
   }
 
   #handleFieldLike(match: RegExpExecArray): void {

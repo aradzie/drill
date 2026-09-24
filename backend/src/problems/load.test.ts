@@ -34,3 +34,34 @@ test("loads streamed notes and reports parser and validation errors", async (t) 
   ]);
   assert.deepEqual(malformed.problems, []);
 });
+
+test("loads inherited tag changes as problem tag arrays", async (t) => {
+  const directory = await mkdtemp(path.join(tmpdir(), "drill-notes-"));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  await writeFile(
+    path.join(directory, "tags.note"),
+    [
+      "!type: Problem",
+      "!tags: A B C",
+      "!id: one",
+      "!front: One",
+      "!back: Answer",
+      "~~~",
+      "!tags: +X -C",
+      "!id: two",
+      "!front: Two",
+      "!back: Answer",
+      "~~~",
+    ].join("\n"),
+  );
+
+  const loaded = await loadProblems([directory]);
+  assert.deepEqual(loaded.errors, []);
+  assert.deepEqual(
+    loaded.problems.map((problem) => problem.tags),
+    [
+      ["A", "B", "C"],
+      ["A", "B", "X"],
+    ],
+  );
+});

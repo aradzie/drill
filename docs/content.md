@@ -23,6 +23,8 @@ A file may contain several problems:
 
 Set the type to `Problem`. Put type, deck, and tags before the fields; these properties carry forward to later problems until overridden. Separate deck levels with `::` and tags with whitespace.
 
+An unprefixed `!tags:` list replaces the inherited tags. Prefix a tag with `+` to add it or `-` to remove it for the current and later problems. For example, after `!tags: A B C`, `!tags: +X` gives the next problem `A B C X`, and `!tags: -X -C` leaves `A B`. Adding an existing tag or removing an absent tag has no effect. A directive cannot mix unprefixed tags with additions or removals; `!tags: A +B -C` is an error. An empty `!tags:` clears the list.
+
 Give each problem a unique, stable `id`, a `front` question, and a `back` answer. A `hint` is optional. Field text may continue on subsequent lines and supports Markdown and math. End every problem with `~~~`; fields do not carry forward.
 
 Keep IDs when editing or moving problems so their study history stays attached. Avoid duplicate IDs and repeated fields. Loading errors prevent the catalog from opening successfully; Drill does not show a partial catalog.

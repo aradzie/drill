@@ -39,7 +39,7 @@ export type ParsedField = SourceLocation & {
 export type ParsedNote = SourceLocation & {
   type: string;
   deck: string;
-  tags: string;
+  tags: string[];
   fields: ParsedField[];
 };
 

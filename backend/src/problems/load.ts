@@ -72,7 +72,7 @@ function noteToProblem(state: LoadState, note: ParsedNote): Problem | null {
   return {
     id: id!.value,
     deck: note.deck,
-    tags: note.tags ? note.tags.split(/\s+/) : [],
+    tags: note.tags,
     body: front!.value,
     answer: back!.value,
     hint: hint?.value ?? null,

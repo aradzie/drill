@@ -39,7 +39,7 @@ test("parses inherited properties and multiline fields", () => {
       line: 5,
       type: "Math Problem",
       deck: "Math Problems",
-      tags: "Problem Integral",
+      tags: ["Problem", "Integral"],
       fields: [
         { path: "example.note", line: 5, name: "id", value: "first" },
         { path: "example.note", line: 6, name: "front", value: "First line\nsecond line" },
@@ -51,7 +51,7 @@ test("parses inherited properties and multiline fields", () => {
       line: 11,
       type: "Math Problem",
       deck: "Math Problems",
-      tags: "Problem Integral",
+      tags: ["Problem", "Integral"],
       fields: [
         { path: "example.note", line: 11, name: "id", value: "second" },
         { path: "example.note", line: 12, name: "front", value: "Prompt" },
@@ -59,6 +59,93 @@ test("parses inherited properties and multiline fields", () => {
       ],
     },
   ]);
+});
+
+test("adds and removes inherited tags across notes", () => {
+  const state = parseNotes(
+    "example.note",
+    [
+      "!tags: A B C",
+      "!front: One",
+      "~~~",
+      "!front: Two",
+      "~~~",
+      "!tags: +X",
+      "!front: Three",
+      "~~~",
+      "!tags: -X -C",
+      "!front: Four",
+      "~~~",
+      "!tags: +B +Y -missing",
+      "!front: Five",
+      "~~~",
+      "!tags: D E",
+      "!front: Six",
+      "~~~",
+      "!tags: +X -E",
+      "!front: Seven",
+      "~~~",
+      "!tags: -D +D",
+      "!front: Eight",
+      "~~~",
+      "!tags: +X -X +X",
+      "!front: Nine",
+      "~~~",
+      "!tags:",
+      "!front: Ten",
+      "~~~",
+    ].join("\n"),
+  );
+
+  assert.deepEqual(state.errors, []);
+  assert.deepEqual(
+    state.notes.map((note) => note.tags),
+    [
+      ["A", "B", "C"],
+      ["A", "B", "C"],
+      ["A", "B", "C", "X"],
+      ["A", "B"],
+      ["A", "B", "Y"],
+      ["D", "E"],
+      ["D", "X"],
+      ["X", "D"],
+      ["D", "X"],
+      [],
+    ],
+  );
+});
+
+test("rejects mixed replacement and tag changes at the directive line", () => {
+  const state = parseNotes(
+    "example.note",
+    [
+      "!tags: A B C",
+      "!front: One",
+      "~~~",
+      "!tags: A +B -C",
+      "!front: Two",
+      "~~~",
+      "!tags: +B A",
+      "!front: Three",
+      "~~~",
+      "!front: Four",
+      "~~~",
+    ].join("\n"),
+  );
+
+  assert.deepEqual(state.errors, [
+    new ParseError("example.note", 4, "Cannot mix plain tags with additions or removals in '!tags:'."),
+    new ParseError("example.note", 7, "Cannot mix plain tags with additions or removals in '!tags:'."),
+  ]);
+  assert.deepEqual(
+    state.notes.map((note) => note.tags),
+    [
+      ["A", "B", "C"],
+      ["A", "B", "C"],
+      ["A", "B", "C"],
+      ["A", "B", "C"],
+    ],
+  );
 });
 
 test("preserves duplicate fields for validation", () => {
@@ -179,14 +266,14 @@ test("normalizes names and properties while preserving multiline indentation and
     line: 3,
     type: "Math Problem",
     deck: "Default",
-    tags: "One Two",
+    tags: ["One", "Two"],
     fields: [{ path: "example.note", line: 3, name: "extra field", value: "first\n  indented\n\nlast" }],
   });
   assert.deepEqual(
     state.notes.slice(1).map((note) => [note.line, note.type, note.tags, note.fields]),
     [
-      [9, "Math Problem", "", []],
-      [10, "Math Problem", "", []],
+      [9, "Math Problem", [], []],
+      [10, "Math Problem", [], []],
     ],
   );
 });
