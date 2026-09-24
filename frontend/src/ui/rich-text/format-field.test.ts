@@ -27,3 +27,18 @@ test("format", () => {
   equal(formatField("- Hello", stubMath), "<ul>\n<li>Hello</li>\n</ul>");
   equal(formatField("\\[x=1\\]", stubMath), "<p>\\[ x=1 \\]</p>");
 });
+
+test("math in image descriptions stays literal", () => {
+  equal(
+    formatField("Outside $S$ ![Let $S$ be...](image-url.png)", stubMath),
+    '<p>Outside \\( S \\) <img src="image-url.png" alt="Let $S$ be..."></p>',
+  );
+  equal(
+    formatField("![**Let \\(S\\)** be...](image-url.png)", stubMath),
+    '<p><img src="image-url.png" alt="Let \\(S\\) be..."></p>',
+  );
+  equal(
+    formatField('![A "$S$" & < B](image-url.png)', stubMath),
+    '<p><img src="image-url.png" alt="A &quot;$S$&quot; &amp; &lt; B"></p>',
+  );
+});
