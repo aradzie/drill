@@ -20,6 +20,9 @@ export async function loadProblems(directories: Iterable<string>): Promise<{
       if (state.has(problem.id)) {
         state.addError(new ParseError(note.path, note.line, `Duplicate problem id '${problem.id}'.`));
       } else {
+        if (problem.tags.includes("TODO") || problem.answer === "TODO") {
+          continue;
+        }
         state.addProblem(problem);
       }
     }
