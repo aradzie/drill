@@ -20,5 +20,5 @@ export function Meta({ problem }: { problem: Problem }) {
       </span>,
     );
   }
-  return <span className={styles.root}>{...children}</span>;
+  return <div className={styles.root}>{...children}</div>;
 }

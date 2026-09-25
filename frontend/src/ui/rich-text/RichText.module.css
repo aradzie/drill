@@ -6,10 +6,20 @@
   position: absolute;
   inset-block-start: 0;
   inset-inline-end: 0;
+
   opacity: 0;
+  background-color: var(--bg);
 }
 
 .root:hover .tools,
 .root:focus-within .tools {
   opacity: 1;
+}
+
+.alignStart p {
+  text-align: start;
+}
+
+.alignCenter p {
+  text-align: center;
 }

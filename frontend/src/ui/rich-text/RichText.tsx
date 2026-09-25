@@ -1,14 +1,34 @@
 import { mdiContentCopy } from "@mdi/js";
+import { clsx } from "clsx";
 import { IconButton } from "../IconButton.tsx";
 import { Toast } from "../toast/Toast.ts";
 import { formatField } from "./format-field.ts";
 import { renderMathAsHtml } from "./math-renderer.ts";
 import styles from "./RichText.module.css";
 
-export function RichText({ text, className, copyable }: { text: string; className?: string; copyable?: boolean }) {
+export function RichText({
+  className,
+  text,
+  align = "start",
+  copyable = false,
+}: {
+  className?: string;
+  text: string;
+  align?: "start" | "center";
+  copyable?: boolean;
+}) {
   return (
     <div className={styles.root}>
-      <div className={className} dangerouslySetInnerHTML={{ __html: formatField(text, renderMathAsHtml()) }} />
+      <div
+        className={clsx(
+          {
+            [styles.alignStart]: align === "start",
+            [styles.alignCenter]: align === "center",
+          },
+          className,
+        )}
+        dangerouslySetInnerHTML={{ __html: formatField(text, renderMathAsHtml()) }}
+      />
       {copyable && (
         <div className={styles.tools}>
           <IconButton

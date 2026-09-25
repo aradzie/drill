@@ -11,8 +11,6 @@
   padding: 1rem;
   border: 1px solid var(--border);
 
-  text-align: center;
-
   &:hover {
     border-color: var(--accent);
   }

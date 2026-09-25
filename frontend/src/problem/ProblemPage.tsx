@@ -44,13 +44,13 @@ export function ProblemPage({
       <div className={styles.card}>
         <div className={styles.problem}>
           <Meta problem={problem} />
-          <RichText text={problem.body} copyable />
+          <RichText text={problem.body} align="center" copyable />
           {problem.hint && <Hint text={problem.hint} />}
         </div>
 
         {revealed && (
           <div className={styles.answer}>
-            <RichText text={problem.answer} copyable />
+            <RichText text={problem.answer} align="start" copyable />
           </div>
         )}
       </div>

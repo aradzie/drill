@@ -1,4 +1,8 @@
-.hint {
+.root {
   cursor: pointer;
   color: var(--text-muted);
+}
+
+.label {
+  text-align: center;
 }

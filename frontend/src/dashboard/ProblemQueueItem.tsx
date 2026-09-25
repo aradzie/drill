@@ -25,7 +25,7 @@ export function ProblemQueueItem({ entry, onSelect }: { entry: ProblemEntry; onS
         <Meta problem={problem} />
         <span className={styles.status}>{label.replace("_", " ")}</span>
       </div>
-      <RichText className={styles.body} text={problem.body} />
+      <RichText className={styles.body} text={problem.body} align="center" />
     </li>
   );
 }
