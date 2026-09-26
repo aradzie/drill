@@ -56,7 +56,7 @@ export class Filter {
     return new Filter().withDecks(this.#decks.clearSelected()).withTags(this.#tags.clearToggled());
   }
 
-  filter(entries: readonly ProblemEntry[]): ProblemEntry[] {
+  filter(entries: Iterable<ProblemEntry>): ProblemEntry[] {
     const result: ProblemEntry[] = [];
     const test = this.#predicate();
     for (const entry of entries) {
@@ -71,6 +71,6 @@ export class Filter {
     const decks = this.#decks;
     const tags = this.#tags;
     const query = { text: normalizeSearchText(this.#query.text) };
-    return (entry) => decks.matches(entry.problem.deck) && tags.every(entry.problem.tags) && entryMatches(entry, query);
+    return (entry) => decks.matches(entry.problem.deck) && tags.every(entry) && entryMatches(entry, query);
   }
 }

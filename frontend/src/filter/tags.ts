@@ -8,7 +8,7 @@ export class TagSet implements Iterable<string> {
     const tags = new Set<string>();
     const toggled = new Set<string>();
     for (const entry of entries) {
-      for (const tag of entry.problem.tags) {
+      for (const tag of entry.tags) {
         tags.add(tag);
       }
     }
@@ -58,18 +58,9 @@ export class TagSet implements Iterable<string> {
     return this.#toggled.has(tag);
   }
 
-  some(tags: readonly string[]): boolean {
+  every(entry: ProblemEntry): boolean {
     for (const tag of this.#toggled) {
-      if (tags.includes(tag)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  every(tags: readonly string[]): boolean {
-    for (const tag of this.#toggled) {
-      if (!tags.includes(tag)) {
+      if (!entry.tags.includes(tag)) {
         return false;
       }
     }

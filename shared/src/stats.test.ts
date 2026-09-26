@@ -106,6 +106,7 @@ function problemEntry(id: string, deck: string): ProblemEntry {
     state: initialProblemState(),
     events: [],
     lastReview: null,
+    tags: [],
     searchFields: [],
   };
 }

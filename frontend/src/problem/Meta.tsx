@@ -4,7 +4,7 @@ import styles from "./Meta.module.css";
 export function Meta({ problem }: { problem: Problem }) {
   const children = [];
   children.push(
-    <span key={0} className={styles.deck}>
+    <span key={"_deck_"} className={styles.deck}>
       {problem.deck}
     </span>,
   );
@@ -12,7 +12,7 @@ export function Meta({ problem }: { problem: Problem }) {
     if (children.length > 2) {
       children.push(" ");
     } else {
-      children.push(" / ");
+      children.push(" | ");
     }
     children.push(
       <span key={tag} className={styles.tag}>

@@ -56,6 +56,7 @@ export type ProblemEntry = DeepReadonly<{
   events: ProblemEvent[];
   /** The most recent review among `events` by time, or null if never reviewed. */
   lastReview: LastReview | null;
+  tags: string[];
   searchFields: string[];
 }>;
 
@@ -141,6 +142,7 @@ export function buildQueue(problems: readonly Problem[], events: readonly Proble
       state,
       events,
       lastReview,
+      tags: [],
       searchFields: [],
     };
   });

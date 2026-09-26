@@ -9,6 +9,14 @@ function collapseWhitespace(text: string): string {
   return text.trim().replaceAll(/\s+/g, " ");
 }
 
+/** Drops empty levels from a hierarchical tag, so `/A//B/` becomes `A/B`; a tag of only slashes becomes empty. */
+function normalizeTag(tag: string): string {
+  return tag
+    .split("/")
+    .filter((segment) => segment !== "")
+    .join("/");
+}
+
 type ParsedProperty = SourceLocation & {
   name: "type" | "deck" | "tags";
   value: string;
@@ -120,7 +128,7 @@ export class NoteParser {
 
     for (const part of directive.value ? directive.value.split(/\s+/) : []) {
       if (part.startsWith("+")) {
-        const tag = part.slice(1);
+        const tag = normalizeTag(part.slice(1));
         if (tag) {
           additions.add(tag);
           nextTags.add(tag);
@@ -129,7 +137,7 @@ export class NoteParser {
       }
 
       if (part.startsWith("-")) {
-        const tag = part.slice(1);
+        const tag = normalizeTag(part.slice(1));
         if (tag) {
           deletions.add(tag);
           nextTags.delete(tag);
@@ -137,7 +145,10 @@ export class NoteParser {
         continue;
       }
 
-      entries.add(part);
+      const tag = normalizeTag(part);
+      if (tag) {
+        entries.add(tag);
+      }
     }
 
     if (entries.size > 0 && (additions.size > 0 || deletions.size > 0)) {

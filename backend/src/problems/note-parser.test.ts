@@ -115,6 +115,22 @@ test("adds and removes inherited tags across notes", () => {
   );
 });
 
+test("drops empty levels from hierarchical tags", () => {
+  const state = parseNotes(
+    "example.note",
+    ["!tags: /A//B/ A/B C/ / //", "!front: One", "~~~", "!tags: +//X/Y -A//B/ +/", "!front: Two", "~~~"].join("\n"),
+  );
+
+  assert.deepEqual(state.errors, []);
+  assert.deepEqual(
+    state.notes.map((note) => note.tags),
+    [
+      ["A/B", "C"],
+      ["C", "X/Y"],
+    ],
+  );
+});
+
 test("rejects mixed replacement and tag changes at the directive line", () => {
   const state = parseNotes(
     "example.note",
