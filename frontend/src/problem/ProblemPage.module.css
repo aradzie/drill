@@ -42,8 +42,10 @@
   flex: 1;
 
   padding: 1rem;
+  border: none;
 
   appearance: none;
+  background: none;
 
   &:focus-visible {
     z-index: 1;
