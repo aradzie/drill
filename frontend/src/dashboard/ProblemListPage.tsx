@@ -40,12 +40,14 @@ export function ProblemListPage({ onSelectProblem }: { onSelectProblem: (problem
   useHotkey(hotkeys.problemList.shuffleProblems, shuffleNew, { enabled: canShuffle });
   useHotkey(hotkeys.problemList.unshuffleProblems, unshuffleNew, { enabled: canShuffle });
 
+  const foundTags = new Set(entries.flatMap(({ tags }) => tags));
+
   return (
     <Page>
       <Tabs tabs={tabs} activeId={listName} onChange={setListName}>
         <FiltersPanel>
           <DecksFilter filter={filter} setFilter={setFilter} />
-          <TagsFilter filter={filter} setFilter={setFilter} />
+          <TagsFilter filter={filter} setFilter={setFilter} foundTags={foundTags} />
           <SearchFilter filter={filter} setFilter={setFilter} />
         </FiltersPanel>
         {listName === "new" && (

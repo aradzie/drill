@@ -2,22 +2,21 @@ import type { ProblemEntry } from "shared";
 
 export class TagSet implements Iterable<string> {
   readonly #tags: ReadonlySet<string>;
-  readonly #toggled: ReadonlySet<string>;
+  readonly #selected: ReadonlySet<string>;
 
   static from(entries: Iterable<ProblemEntry>): TagSet {
     const tags = new Set<string>();
-    const toggled = new Set<string>();
     for (const entry of entries) {
       for (const tag of entry.tags) {
         tags.add(tag);
       }
     }
-    return new TagSet(new Set([...tags].sort()), toggled);
+    return new TagSet(new Set([...tags].sort()), new Set());
   }
 
-  private constructor(tags: ReadonlySet<string>, toggled: ReadonlySet<string>) {
+  private constructor(tags: ReadonlySet<string>, selected: ReadonlySet<string>) {
     this.#tags = tags;
-    this.#toggled = toggled;
+    this.#selected = selected;
   }
 
   [Symbol.iterator](): IterableIterator<string> {
@@ -28,10 +27,17 @@ export class TagSet implements Iterable<string> {
     return this.#tags.has(tag);
   }
 
-  toggle(tag: string, add: boolean = true): TagSet {
+  isSelected(tag: string): boolean {
+    return this.#selected.has(tag);
+  }
+
+  toggleSelected(tag: string, add: boolean = true): TagSet {
+    if (!this.#tags.has(tag)) {
+      return this;
+    }
     if (add) {
-      const next = new Set<string>(this.#toggled);
-      if (this.#toggled.has(tag)) {
+      const next = new Set<string>(this.#selected);
+      if (this.#selected.has(tag)) {
         next.delete(tag);
       } else {
         next.add(tag);
@@ -39,27 +45,23 @@ export class TagSet implements Iterable<string> {
       return new TagSet(this.#tags, next);
     } else {
       const next = new Set<string>();
-      if (!this.#toggled.has(tag)) {
+      if (!this.#selected.has(tag) || this.#selected.size > 1) {
         next.add(tag);
       }
       return new TagSet(this.#tags, next);
     }
   }
 
-  get hasToggled(): boolean {
-    return this.#toggled.size > 0;
+  get hasSelected(): boolean {
+    return this.#selected.size > 0;
   }
 
-  clearToggled(): TagSet {
+  clearSelected(): TagSet {
     return new TagSet(this.#tags, new Set());
   }
 
-  isToggled(tag: string): boolean {
-    return this.#toggled.has(tag);
-  }
-
   every(entry: ProblemEntry): boolean {
-    for (const tag of this.#toggled) {
+    for (const tag of this.#selected) {
       if (!entry.tags.includes(tag)) {
         return false;
       }

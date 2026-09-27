@@ -2,7 +2,15 @@ import { Chip } from "../ui/Chip.tsx";
 import type { Filter } from "./filter.ts";
 import styles from "./TagsFilter.module.css";
 
-function TagsFilter({ filter, setFilter }: { filter: Filter; setFilter: (filter: Filter) => void }) {
+function TagsFilter({
+  filter,
+  setFilter,
+  foundTags,
+}: {
+  filter: Filter;
+  setFilter: (filter: Filter) => void;
+  foundTags: ReadonlySet<string>;
+}) {
   const tags = [...filter.tags];
   if (tags.length === 0) {
     return null;
@@ -10,20 +18,16 @@ function TagsFilter({ filter, setFilter }: { filter: Filter; setFilter: (filter:
   return (
     <div className={styles.root}>
       {tags.map((tag) => (
-        <TagToggle key={tag} filter={filter} setFilter={setFilter} tag={tag} />
+        <Chip
+          active={filter.tags.isSelected(tag)}
+          muted={!foundTags.has(tag)}
+          title="Click to select this tag. Shift+click to combine multiple tags."
+          onClick={(ev) => setFilter(filter.withTags(filter.tags.toggleSelected(tag, ev.shiftKey)))}
+        >
+          {tag}
+        </Chip>
       ))}
     </div>
-  );
-}
-
-function TagToggle({ filter, setFilter, tag }: { filter: Filter; setFilter: (filter: Filter) => void; tag: string }) {
-  return (
-    <Chip
-      active={filter.tags.isToggled(tag)}
-      onClick={(ev) => setFilter(filter.withTags(filter.tags.toggle(tag, ev.shiftKey)))}
-    >
-      {tag}
-    </Chip>
   );
 }
 

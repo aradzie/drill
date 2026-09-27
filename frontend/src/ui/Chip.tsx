@@ -7,6 +7,7 @@ function Chip({
   ref,
   children,
   active,
+  muted,
   disabled,
   tabIndex,
   title,
@@ -16,6 +17,7 @@ function Chip({
   ref?: Ref<HTMLButtonElement>;
   children: ReactNode;
   active?: boolean;
+  muted?: boolean;
   title?: string;
 } & FocusProps &
   MouseProps &
@@ -24,7 +26,7 @@ function Chip({
   return (
     <button
       ref={ref}
-      className={clsx(styles.root, active && styles.active)}
+      className={clsx(styles.root, muted && styles.muted, active && styles.active)}
       disabled={disabled}
       tabIndex={tabIndex}
       title={title}

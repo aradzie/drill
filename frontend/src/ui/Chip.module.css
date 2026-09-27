@@ -20,6 +20,10 @@
   }
 }
 
+.muted {
+  color: var(--text-muted);
+}
+
 .active {
   border-color: var(--accent);
   color: var(--accent);

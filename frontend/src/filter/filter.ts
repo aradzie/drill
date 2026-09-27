@@ -25,7 +25,7 @@ export class Filter {
   }
 
   get isActive(): boolean {
-    return this.#decks.hasSelected || this.#tags.hasToggled || this.#query.text !== "";
+    return this.#decks.hasSelected || this.#tags.hasSelected || this.#query.text !== "";
   }
 
   withDecks(decks: DeckSet): Filter {
@@ -53,7 +53,7 @@ export class Filter {
   }
 
   reset(): Filter {
-    return new Filter().withDecks(this.#decks.clearSelected()).withTags(this.#tags.clearToggled());
+    return new Filter().withDecks(this.#decks.clearSelected()).withTags(this.#tags.clearSelected());
   }
 
   filter(entries: Iterable<ProblemEntry>): ProblemEntry[] {
