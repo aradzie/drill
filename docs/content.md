@@ -29,6 +29,6 @@ Separate tag levels with `/`, from general to specific. A hierarchical tag impli
 
 Give each problem a unique, stable `id`, a `front` question, and a `back` answer. A `hint` is optional. Field text may continue on subsequent lines and supports Markdown and math. End every problem with `~~~`; fields do not carry forward.
 
-Keep IDs when editing or moving problems so their study history stays attached. Avoid duplicate IDs and repeated fields. Loading errors prevent the catalog from opening successfully; Drill does not show a partial catalog.
+Use `![Alt text](img/figure.png)` to include an image beside a `.note` file. Image paths are relative to that file; `.svg`, `.png`, and `.jpg` are supported. Absolute URLs are left as written.
 
-[Development guide](../AGENTS.md)
+Keep IDs when editing or moving problems so their study history stays attached. Avoid duplicate IDs and repeated fields. Loading errors prevent the catalog from opening successfully; Drill does not show a partial catalog.

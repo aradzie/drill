@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
@@ -14,19 +14,19 @@ test("loads streamed notes and reports parser and validation errors", async (t) 
     file,
     "!type: Problem\r\n!delete: old\r\n!id: one\r\n!front: Prompt\r\ncontinued\r\n!back: Answer\r\n~~~",
   );
-  const loaded = await loadProblems([directory]);
+  const loaded = await loadProblems(directory);
   assert.deepEqual(loaded.errors, []);
   assert.deepEqual(loaded.problems, [
     { id: "one", deck: "Default", tags: [], body: "Prompt\ncontinued", answer: "Answer", hint: null },
   ]);
 
   await writeFile(file, "!type: Problem\n!id: one\n!ID: two\n!front: Prompt\n!back: Answer\n~~~\n");
-  const invalid = await loadProblems([directory]);
+  const invalid = await loadProblems(directory);
   assert.deepEqual(invalid.errors, [new ParseError(file, 3, "Duplicate field 'id'.")]);
   assert.deepEqual(invalid.problems, []);
 
   await writeFile(file, "outside\n!type: Problem\n!type: Basic\n!front: Prompt");
-  const malformed = await loadProblems([directory]);
+  const malformed = await loadProblems(directory);
   assert.deepEqual(malformed.errors, [
     new ParseError(file, 1, "Unexpected text outside a multiline field."),
     new ParseError(file, 3, "Duplicate property 'type'."),
@@ -55,7 +55,7 @@ test("loads inherited tag changes as problem tag arrays", async (t) => {
     ].join("\n"),
   );
 
-  const loaded = await loadProblems([directory]);
+  const loaded = await loadProblems(directory);
   assert.deepEqual(loaded.errors, []);
   assert.deepEqual(
     loaded.problems.map((problem) => problem.tags),
@@ -64,4 +64,35 @@ test("loads inherited tag changes as problem tag arrays", async (t) => {
       ["A", "B", "X"],
     ],
   );
+});
+
+test("resolves simple relative images in each displayed field", async (t) => {
+  const directory = await mkdtemp(path.join(tmpdir(), "drill-notes-"));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const noteDirectory = path.join(directory, "calculus");
+  await mkdir(noteDirectory);
+  await writeFile(
+    path.join(noteDirectory, "images.note"),
+    [
+      "!type: Problem",
+      "!id: one",
+      "!front: ![Front](./img/figure%201.png) and ![Web](https://example.com/figure.png)",
+      "!back: ![Back](img/figure.jpg)",
+      "!hint: ![Hint](../other.svg)",
+      "~~~",
+    ].join("\n"),
+  );
+
+  const loaded = await loadProblems(directory);
+  assert.deepEqual(loaded.errors, []);
+  assert.deepEqual(loaded.problems, [
+    {
+      id: "one",
+      deck: "Default",
+      tags: [],
+      body: "![Front](/api/assets/calculus/img/figure%201.png) and ![Web](https://example.com/figure.png)",
+      answer: "![Back](/api/assets/calculus/img/figure.jpg)",
+      hint: "![Hint](/api/assets/other.svg)",
+    },
+  ]);
 });

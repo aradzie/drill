@@ -1,8 +1,10 @@
-import { existsSync } from "node:fs";
+import { existsSync, realpathSync } from "node:fs";
+import path from "node:path";
 import fastifyStatic from "@fastify/static";
 import Fastify from "fastify";
 import { CommandError, problemCommandSchema } from "shared";
 import { problemsDir, publicDir } from "./paths.ts";
+import { assetsPrefix } from "./problems/images.ts";
 import { loadProblems } from "./problems/load.ts";
 import { Db } from "./store/db.ts";
 import { EventStore } from "./store/events.ts";
@@ -12,13 +14,13 @@ export type ServeOptions = {
   host: string;
 };
 
-export async function buildServer() {
+export async function buildServer(contentDir = problemsDir) {
   const store = new EventStore(Db.open());
   const app = Fastify({ logger: true });
 
   // Problem content is loaded fresh on every request, so file edits appear immediately.
   app.get("/api/problems", async () => {
-    const { errors, problems } = await loadProblems([problemsDir]);
+    const { errors, problems } = await loadProblems(contentDir);
     if (errors.length > 0) {
       throw new AggregateError(errors);
     }
@@ -41,6 +43,29 @@ export async function buildServer() {
       }
       throw err;
     }
+  });
+
+  app.register(fastifyStatic, {
+    root: contentDir,
+    prefix: assetsPrefix,
+    decorateReply: false,
+    allowedPath: (pathname, root) => {
+      if (!/\.(?:svg|png|jpg)$/i.test(pathname)) {
+        return false;
+      }
+      try {
+        const relative = path.relative(realpathSync(root), realpathSync(path.join(root, pathname)));
+        return relative !== ".." && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative);
+      } catch {
+        return false;
+      }
+    },
+    setHeaders: (response, file) => {
+      response.header("X-Content-Type-Options", "nosniff");
+      if (/\.svg$/i.test(file)) {
+        response.header("Content-Security-Policy", "sandbox");
+      }
+    },
   });
 
   const serveFrontend = existsSync(publicDir);

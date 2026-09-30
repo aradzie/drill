@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdir, mkdtemp, readdir, readFile, rm, utimes, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readdir, readFile, rm, symlink, utimes, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
@@ -78,4 +78,40 @@ test("HTTP commands persist before success, survive restart, and recover from st
       ["stop", "p", new Date(retried.json().event.occurredAt).toISOString(), "stop"],
     ],
   );
+});
+
+test("serves rewritten problem images without exposing other files or external symlinks", async (t) => {
+  const directory = await mkdtemp(path.join(tmpdir(), "drill-images-"));
+  const outside = await mkdtemp(path.join(tmpdir(), "drill-outside-"));
+  t.after(async () => {
+    await rm(directory, { recursive: true, force: true });
+    await rm(outside, { recursive: true, force: true });
+  });
+  await mkdir(path.join(directory, "calculus", "img"), { recursive: true });
+  await writeFile(
+    path.join(directory, "calculus", "example.note"),
+    "!type: Problem\n!id: one\n!front: ![Figure](img/figure.png)\n!back: Answer\n~~~",
+  );
+  await writeFile(path.join(directory, "calculus", "img", "figure.png"), "image bytes");
+  await writeFile(path.join(directory, "calculus", "img", "hidden.txt"), "private text");
+  await writeFile(path.join(outside, "outside.png"), "outside image");
+  await symlink(path.join(outside, "outside.png"), path.join(directory, "calculus", "img", "outside.png"));
+
+  const app = await buildServer(directory);
+  t.after(() => app.close());
+  const catalog = await app.inject({ method: "GET", url: "/api/problems" });
+  assert.equal(catalog.statusCode, 200);
+  assert.equal(catalog.json()[0].body, "![Figure](/api/assets/calculus/img/figure.png)");
+
+  const image = await app.inject({ method: "GET", url: "/api/assets/calculus/img/figure.png" });
+  assert.equal(image.statusCode, 200);
+  assert.equal(image.headers["content-type"], "image/png");
+  assert.equal(image.body, "image bytes");
+  await writeFile(path.join(directory, "calculus", "img", "new.svg"), '<svg xmlns="http://www.w3.org/2000/svg"/>');
+  const svg = await app.inject({ method: "GET", url: "/api/assets/calculus/img/new.svg" });
+  assert.equal(svg.statusCode, 200);
+  assert.equal(svg.headers["content-security-policy"], "sandbox");
+  assert.equal((await app.inject({ method: "GET", url: "/api/assets/calculus/img/hidden.txt" })).statusCode, 404);
+  assert.equal((await app.inject({ method: "GET", url: "/api/assets/calculus/img/outside.png" })).statusCode, 404);
+  assert.equal((await app.inject({ method: "GET", url: "/api/assets/../calculus/example.note" })).statusCode, 404);
 });

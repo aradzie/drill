@@ -20,6 +20,16 @@
   text-wrap: pretty;
 }
 
+.body p > img,
+.body p > picture,
+.body p > video,
+.body p > canvas,
+.body p > svg {
+  display: block;
+  max-inline-size: 100%;
+  margin: 1rem auto;
+}
+
 .alignStart p {
   text-align: start;
 }

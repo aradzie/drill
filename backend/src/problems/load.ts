@@ -1,21 +1,22 @@
 import type { Problem } from "shared";
 import { ParseError } from "./error.ts";
 import { findFiles } from "./files.ts";
+import { rewriteImageUrls } from "./images.ts";
 import { NoteParser } from "./note-parser.ts";
 import { LoadState, type ParsedField, type ParsedNote } from "./state.ts";
 
-/** Loads every Math Problem note below the given Notatki problem-directories. */
-export async function loadProblems(directories: Iterable<string>): Promise<{
+/** Loads every Math Problem note below the given directory. */
+export async function loadProblems(directory: string): Promise<{
   errors: ParseError[];
   problems: Problem[];
 }> {
   const state = new LoadState();
-  await findFiles(directories, state);
+  await findFiles(directory, state);
   for (const file of state.files) {
     NoteParser.parse(state, file);
   }
   for (const note of state.notes) {
-    const problem = noteToProblem(state, note);
+    const problem = noteToProblem(state, note, directory);
     if (problem) {
       if (state.has(problem.id)) {
         state.addError(new ParseError(note.path, note.line, `Duplicate problem id '${problem.id}'.`));
@@ -33,7 +34,7 @@ export async function loadProblems(directories: Iterable<string>): Promise<{
   };
 }
 
-function noteToProblem(state: LoadState, note: ParsedNote): Problem | null {
+function noteToProblem(state: LoadState, note: ParsedNote, directory: string): Problem | null {
   const errors: ParseError[] = [];
 
   if (note.type !== "Problem") {
@@ -73,9 +74,9 @@ function noteToProblem(state: LoadState, note: ParsedNote): Problem | null {
     id: id!.value,
     deck: note.deck,
     tags: note.tags,
-    body: front!.value,
-    answer: back!.value,
-    hint: hint?.value ?? null,
+    body: rewriteImageUrls(front!.value, note.path, directory),
+    answer: rewriteImageUrls(back!.value, note.path, directory),
+    hint: hint ? rewriteImageUrls(hint.value, note.path, directory) : null,
   };
 }
 
