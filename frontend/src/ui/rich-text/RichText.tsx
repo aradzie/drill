@@ -21,6 +21,7 @@ export function RichText({
     <div className={styles.root}>
       <div
         className={clsx(
+          styles.body,
           {
             [styles.alignStart]: align === "start",
             [styles.alignCenter]: align === "center",

@@ -16,6 +16,10 @@
   opacity: 1;
 }
 
+.body p {
+  text-wrap: pretty;
+}
+
 .alignStart p {
   text-align: start;
 }
