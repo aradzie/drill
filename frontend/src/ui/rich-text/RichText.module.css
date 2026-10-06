@@ -20,11 +20,11 @@
   text-wrap: pretty;
 }
 
-.body p > img,
-.body p > picture,
-.body p > video,
-.body p > canvas,
-.body p > svg {
+.body p > img:only-child,
+.body p > picture:only-child,
+.body p > video:only-child,
+.body p > canvas:only-child,
+.body p > svg:only-child {
   display: block;
   max-inline-size: 100%;
   margin: 1rem auto;
