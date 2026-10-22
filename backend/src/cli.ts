@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { parseArgs } from "node:util";
 import { serve } from "./server.ts";
 import { installService, uninstallService } from "./service.ts";
 
@@ -18,72 +19,35 @@ Options for "service install":
   --enable     Also run "systemctl --user enable --now" immediately
 `;
 
-function parseArgs(argv: string[]) {
-  const args = [...argv];
-  let command = "serve";
-  let subcommand: string | undefined;
-
-  if (args[0] && !args[0].startsWith("-")) {
-    command = args.shift()!;
-  }
-  if (command === "service" && args[0] && !args[0].startsWith("-")) {
-    subcommand = args.shift();
-  }
-
-  let port = Number(process.env.PORT) || 3000;
-  let host = "0.0.0.0";
-  let enable = false;
-
-  for (let i = 0; i < args.length; i++) {
-    const arg = args[i];
-    if (arg === "--port") {
-      port = Number(args[++i]);
-    } else if (arg === "--host") {
-      host = args[++i];
-    } else if (arg === "--enable") {
-      enable = true;
-    } else if (arg === "--help" || arg === "-h") {
-      command = "help";
-    }
-  }
-
-  return { command, subcommand, port, host, enable };
-}
-
-async function main() {
-  const { command, subcommand, port, host, enable } = parseArgs(process.argv.slice(2));
-
-  if (command === "help") {
-    console.log(HELP);
-    return;
-  }
-
-  if (command === "serve") {
-    await serve({ port, host });
-    return;
-  }
-
-  if (command === "service") {
-    if (subcommand === "install") {
-      installService({ port, host, enable });
-      return;
-    }
-    if (subcommand === "uninstall") {
-      uninstallService();
-      return;
-    }
-    console.error(`Unknown service subcommand: ${subcommand ?? "(none)"}\n`);
-    console.log(HELP);
-    process.exitCode = 1;
-    return;
-  }
-
-  console.error(`Unknown command: ${command}\n`);
+function fail(message: string) {
+  console.error(`${message}\n`);
   console.log(HELP);
   process.exitCode = 1;
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exitCode = 1;
+const { values, positionals } = parseArgs({
+  allowPositionals: true,
+  options: {
+    host: { type: "string", default: "0.0.0.0" },
+    port: { type: "string", default: process.env["PORT"] ?? "3000" },
+    enable: { type: "boolean", default: false },
+    help: { type: "boolean", short: "h", default: false },
+  },
 });
+
+const [command = "serve", subcommand, ...rest] = positionals;
+const port = Number(values.port);
+
+if (values.help) {
+  console.log(HELP);
+} else if (!Number.isInteger(port) || port < 0 || port > 65535) {
+  fail(`Invalid port: ${values.port}`);
+} else if (command === "serve" && subcommand == null) {
+  await serve({ port, host: values.host });
+} else if (command === "service" && subcommand === "install" && rest.length === 0) {
+  installService({ port, host: values.host, enable: values.enable });
+} else if (command === "service" && subcommand === "uninstall" && rest.length === 0) {
+  uninstallService();
+} else {
+  fail(`Unknown command: ${positionals.join(" ")}`);
+}
