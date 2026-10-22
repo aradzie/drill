@@ -3,9 +3,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 // ESM has no native __dirname — derive it from the module's own URL. Bundled
-// to a single file (tsup), so this is always the directory the running
+// to a single file (rolldown), so this is always the directory the running
 // module itself lives in: `app/` in prod, wherever it's been moved to; in
-// dev (tsx, running straight from source) it's backend/src/.
+// dev (running straight from source) it's backend/src/.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // `public/` is guaranteed to be a sibling of the bundled module by the build

@@ -25,7 +25,7 @@ Run these from the repository root. The root scripts delegate to the npm workspa
 | `npm run dev:backend`               | Run the backend directly with Node's native TypeScript support            |
 | `npm run build`                     | Build frontend, then backend                                              |
 | `npm run build:frontend`            | Run `tsc -b` and Vite; output to `app/public/`                            |
-| `npm run build:backend`             | Run the esbuild build script; output `app/index.js` and its source map    |
+| `npm run build:backend`             | Run the rolldown build script; output `app/index.js` and its source map   |
 | `npm run typecheck`                 | Check shared and frontend with `tsc -b`, then backend with `tsc --noEmit` |
 | `npm test`                          | Run workspace tests where a test script exists                            |
 | `npm start`                         | Run the bundled app; build first                                          |
