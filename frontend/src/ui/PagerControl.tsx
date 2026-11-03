@@ -26,7 +26,8 @@ function PagerControl({ pager, onPager }: { pager: Pager; onPager: (pager: Pager
         </span>,
       );
     }
-    for (let index = begin; index < end; index++) {
+    for (let i = begin; i < end; i++) {
+      const index = i;
       nodes.push(
         <LinkButton
           key={index}
