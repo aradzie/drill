@@ -13,7 +13,10 @@ import { FilterProvider } from "./filter/FilterProvider.tsx";
 import { HelpDialog } from "./help/HelpDialog.tsx";
 import { TodayProvider } from "./time/TodayProvider.tsx";
 import { HotkeyProvider } from "./ui/hotkeys/HotkeyProvider.tsx";
+import { installCopyTex } from "./ui/rich-text/copy-tex.ts";
 import { ToastContainer } from "./ui/toast/ToastContainer.tsx";
+
+installCopyTex();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

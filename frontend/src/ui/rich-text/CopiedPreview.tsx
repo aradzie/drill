@@ -14,6 +14,7 @@ export async function copyToClipboard(tex: string) {
     Toast.show({ message: "Could not copy to the clipboard.", variant: "error" });
   }
 }
+
 export function CopiedPreview({ tex }: { tex: string }) {
   return (
     <div className={styles.root}>

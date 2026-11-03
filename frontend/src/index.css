@@ -44,10 +44,6 @@ h3 {
   font-weight: 700;
 }
 
-.katex {
-  user-select: none;
-}
-
 /* Word joiners glue inline math to adjacent punctuation, which browsers otherwise may wrap onto
    the next line on its own (for example, a period after a formula). Display math is excluded
    because its block box would gain an extra line. */
