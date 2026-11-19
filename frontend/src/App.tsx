@@ -1,5 +1,5 @@
 import { Link, Navigate, Route, Routes, useLocation, useNavigate, useParams } from "react-router-dom";
-import { LIST_NAMES } from "shared";
+import { LIST_NAMES, type ListName } from "shared";
 import { useCollection } from "./collection/useCollection.ts";
 import { useEvents } from "./collection/useEvents.ts";
 import { ProblemListPage } from "./dashboard/ProblemListPage.tsx";
@@ -11,9 +11,22 @@ import { StatsPage } from "./stats/StatsPage.tsx";
 import { ScreenCenter } from "./ui/ScreenCenter.tsx";
 import { linkClassName } from "./ui/styles.ts";
 
-function WithHeader({ children }: { children: React.ReactNode }) {
+const listTitles: Record<ListName, string> = {
+  "new": "New problems",
+  "due": "Due problems",
+  "in-progress": "Problems in progress",
+  "reviewed": "Reviewed problems",
+};
+
+// React hoists <title> into the document head.
+function Title({ children }: { children: string }) {
+  return <title>{`${children} · drill`}</title>;
+}
+
+function WithHeader({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <>
+      <Title>{title}</Title>
       <Header />
       {children}
     </>
@@ -32,6 +45,7 @@ function ProblemRoute() {
   if (entry == null) {
     return (
       <ScreenCenter>
+        <Title>Problem not found</Title>
         <p>Problem not found.</p>
         <Link to={`/problems/${listName}`} className={linkClassName(false)}>
           Back to problems
@@ -50,27 +64,30 @@ function ProblemRoute() {
   }
 
   return (
-    <ProblemPage
-      entry={entry}
-      isSubmitting={isSubmitting}
-      onStart={async () => {
-        if (!isSubmitting) {
-          await start(entry.problem.id);
-        }
-      }}
-      onStop={async () => {
-        if (!isSubmitting) {
-          await stop(entry.problem.id);
-        }
-      }}
-      onGrade={async (grade) => {
-        if (!isSubmitting) {
-          await review(entry.problem.id, grade);
-          goBack();
-        }
-      }}
-      onBack={goBack}
-    />
+    <>
+      <Title>{entry.problem.id}</Title>
+      <ProblemPage
+        entry={entry}
+        isSubmitting={isSubmitting}
+        onStart={async () => {
+          if (!isSubmitting) {
+            await start(entry.problem.id);
+          }
+        }}
+        onStop={async () => {
+          if (!isSubmitting) {
+            await stop(entry.problem.id);
+          }
+        }}
+        onGrade={async (grade) => {
+          if (!isSubmitting) {
+            await review(entry.problem.id, grade);
+            goBack();
+          }
+        }}
+        onBack={goBack}
+      />
+    </>
   );
 }
 
@@ -80,13 +97,13 @@ function ListRoute() {
     return <Navigate to="/problems/new" replace />;
   }
   return (
-    <WithHeader>
+    <WithHeader title={listTitles[list as ListName]}>
       <ProblemListPage />
     </WithHeader>
   );
 }
 
-export function App() {
+function App() {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/problems/new" replace />} />
@@ -96,7 +113,7 @@ export function App() {
       <Route
         path="/stats"
         element={
-          <WithHeader>
+          <WithHeader title="Stats">
             <StatsPage />
           </WithHeader>
         }
@@ -104,7 +121,7 @@ export function App() {
       <Route
         path="/settings"
         element={
-          <WithHeader>
+          <WithHeader title="Settings">
             <SettingsPage />
           </WithHeader>
         }
@@ -113,3 +130,5 @@ export function App() {
     </Routes>
   );
 }
+
+export { App };
