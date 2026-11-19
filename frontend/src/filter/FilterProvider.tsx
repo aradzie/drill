@@ -1,5 +1,6 @@
 import { type ReactNode, useState } from "react";
-import type { ListName } from "shared";
+import { useMatch, useNavigate } from "react-router-dom";
+import { LIST_NAMES, type ListName } from "shared";
 import { useCollection } from "../collection/useCollection.ts";
 import { Pager } from "../ui/pager.ts";
 import { Filter } from "./filter.ts";
@@ -11,12 +12,20 @@ function randomSeed(): number {
 }
 
 export function FilterProvider({ children }: { children: ReactNode }) {
+  const navigate = useNavigate();
   const collection = useCollection();
-  const [listName, setListName] = useState<ListName>("new");
+  // The route owns the active list. Off the list routes (e.g. a problem page) the last list is retained.
+  const routeList = useMatch("/problems/:list")?.params.list;
+  const [listName, setListNameState] = useState<ListName>("new");
   const [filter, setFilter] = useState(() => Filter.from(collection.entries));
   const [pageIndex, setPageIndex] = useState(0);
   const [shuffleSeed, setShuffleSeed] = useState<number | null>(null);
   const [areFiltersOpen, setAreFiltersOpen] = useState(false);
+
+  if (routeList != null && routeList !== listName && (LIST_NAMES as string[]).includes(routeList)) {
+    setListNameState(routeList as ListName);
+    setPageIndex(0);
+  }
 
   const filtered = filter.filter(collection[listName]);
   const entries = listName === "new" && shuffleSeed != null ? shuffleProblems(filtered, shuffleSeed) : filtered;
@@ -27,8 +36,7 @@ export function FilterProvider({ children }: { children: ReactNode }) {
       value={{
         listName,
         setListName: (listName) => {
-          setListName(listName);
-          setPageIndex(0);
+          navigate(`/problems/${listName}`, { replace: true });
         },
         filter,
         setFilter: (filter) => {

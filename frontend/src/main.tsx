@@ -4,6 +4,7 @@ import "./fonts.ts";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "react-error-boundary";
+import { BrowserRouter } from "react-router-dom";
 import { App } from "./App.tsx";
 import { DataReady } from "./collection/DataReady.tsx";
 import { EventsProvider } from "./collection/EventsProvider.tsx";
@@ -25,12 +26,14 @@ createRoot(document.getElementById("root")!).render(
         <EventsProvider>
           <DataReady>
             <TodayProvider>
-              <FilterProvider>
-                <HotkeyProvider>
-                  <App />
-                  <HelpDialog />
-                </HotkeyProvider>
-              </FilterProvider>
+              <BrowserRouter>
+                <FilterProvider>
+                  <HotkeyProvider>
+                    <App />
+                    <HelpDialog />
+                  </HotkeyProvider>
+                </FilterProvider>
+              </BrowserRouter>
             </TodayProvider>
           </DataReady>
         </EventsProvider>

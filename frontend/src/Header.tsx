@@ -1,23 +1,24 @@
-import { LinkButton } from "./ui/LinkButton.tsx";
-import { styleTextLight } from "./ui/styles.ts";
+import { NavLink, useMatch } from "react-router-dom";
+import { useFilter } from "./filter/useFilter.ts";
+import { linkClassName, styleTextLight } from "./ui/styles.ts";
 import styles from "./Header.module.css";
 
-type Screen = "problems" | "stats" | "settings";
-
-export function Header({ active, onNavigate }: { active: Screen; onNavigate: (screen: Screen) => void }) {
+export function Header() {
+  const { listName } = useFilter();
+  const isProblems = useMatch("/problems/*") != null;
   return (
     <nav className={styles.root}>
-      <LinkButton active={active === "problems"} onClick={() => onNavigate("problems")}>
+      <NavLink to={`/problems/${listName}`} className={linkClassName(isProblems)}>
         Problems
-      </LinkButton>
+      </NavLink>
       <span className={styleTextLight}> / </span>
-      <LinkButton active={active === "stats"} onClick={() => onNavigate("stats")}>
+      <NavLink to="/stats" className={({ isActive }) => linkClassName(isActive)}>
         Stats
-      </LinkButton>
+      </NavLink>
       <span className={styleTextLight}> / </span>
-      <LinkButton active={active === "settings"} onClick={() => onNavigate("settings")}>
+      <NavLink to="/settings" className={({ isActive }) => linkClassName(isActive)}>
         Settings
-      </LinkButton>
+      </NavLink>
     </nav>
   );
 }

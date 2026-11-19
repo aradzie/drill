@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import type { ListName } from "shared";
 import { hotkeys } from "../app-hotkeys.ts";
 import { useCollection } from "../collection/useCollection.ts";
@@ -13,7 +14,8 @@ import { ProblemQueue } from "./ProblemQueue.tsx";
 import { Tabs } from "./Tabs.tsx";
 import styles from "./ProblemListPage.module.css";
 
-export function ProblemListPage({ onSelectProblem }: { onSelectProblem: (problemId: string) => void }) {
+export function ProblemListPage() {
+  const navigate = useNavigate();
   const collection = useCollection();
   const { listName, setListName, filter, setFilter, entries, isNewShuffled, shuffleNew, unshuffleNew } = useFilter();
 
@@ -23,6 +25,8 @@ export function ProblemListPage({ onSelectProblem }: { onSelectProblem: (problem
     { id: "in-progress", label: "In progress", count: collection["in-progress"].length },
     { id: "reviewed", label: "Reviewed", count: collection["reviewed"].length },
   ];
+
+  const onSelectProblem = (id: string) => navigate(`/problem/${encodeURIComponent(id)}`);
 
   useHotkey(hotkeys.problemList.resetFilters, () => setFilter(filter.reset()));
   useHotkey(
