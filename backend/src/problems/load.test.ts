@@ -77,7 +77,7 @@ test("resolves simple relative images in each displayed field", async (t) => {
       "!type: Problem",
       "!id: one",
       "!front: ![Front](./img/figure%201.png) and ![Web](https://example.com/figure.png)",
-      "!back: ![Back](img/figure.jpg)",
+      "!back: ![Graph on [-2, 2] by [0, 1]](img/figure.jpg)",
       "!hint: ![Hint](../other.svg)",
       "~~~",
     ].join("\n"),
@@ -91,7 +91,7 @@ test("resolves simple relative images in each displayed field", async (t) => {
       deck: "Default",
       tags: [],
       body: "![Front](/api/assets/calculus/img/figure%201.png) and ![Web](https://example.com/figure.png)",
-      answer: "![Back](/api/assets/calculus/img/figure.jpg)",
+      answer: "![Graph on [-2, 2] by [0, 1]](/api/assets/calculus/img/figure.jpg)",
       hint: "![Hint](/api/assets/other.svg)",
     },
   ]);
