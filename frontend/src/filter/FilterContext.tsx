@@ -5,6 +5,8 @@ import type { Filter } from "./filter.ts";
 
 export type FilterApi = {
   listName: ListName;
+  /** The list route including its filters, remembered while on other screens. */
+  listPath: string;
   setListName: (listName: ListName) => void;
   filter: Filter;
   setFilter: (value: Filter) => void;

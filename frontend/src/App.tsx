@@ -37,7 +37,7 @@ function ProblemRoute() {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
-  const { listName } = useFilter();
+  const { listPath } = useFilter();
   const { start, stop, review, isSubmitting } = useEvents();
   const collection = useCollection();
   const entry = collection.entries.find(({ problem }) => problem.id === id);
@@ -47,7 +47,7 @@ function ProblemRoute() {
       <ScreenCenter>
         <Title>Problem not found</Title>
         <p>Problem not found.</p>
-        <Link to={`/problems/${listName}`} className={linkClassName(false)}>
+        <Link to={listPath} className={linkClassName(false)}>
           Back to problems
         </Link>
       </ScreenCenter>
@@ -59,7 +59,7 @@ function ProblemRoute() {
     if (location.key !== "default") {
       navigate(-1);
     } else {
-      navigate(`/problems/${listName}`, { replace: true });
+      navigate(listPath, { replace: true });
     }
   }
 

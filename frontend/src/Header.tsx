@@ -4,11 +4,11 @@ import { linkClassName, styleTextLight } from "./ui/styles.ts";
 import styles from "./Header.module.css";
 
 export function Header() {
-  const { listName } = useFilter();
+  const { listPath } = useFilter();
   const isProblems = useMatch("/problems/*") != null;
   return (
     <nav className={styles.root}>
-      <NavLink to={`/problems/${listName}`} className={linkClassName(isProblems)}>
+      <NavLink to={listPath} className={linkClassName(isProblems)}>
         Problems
       </NavLink>
       <span className={styleTextLight}> / </span>

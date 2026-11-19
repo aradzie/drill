@@ -28,6 +28,40 @@ export class Filter {
     return this.#decks.hasSelected || this.#tags.hasSelected || this.#query.text !== "";
   }
 
+  /** Serializes the selection (not the available options) as `deck`, repeated `tag`, and `q` parameters. */
+  toSearchParams(): URLSearchParams {
+    const params = new URLSearchParams();
+    if (this.#decks.hasSelected) {
+      params.set("deck", this.#decks.selected);
+    }
+    for (const tag of this.#tags) {
+      if (this.#tags.isSelected(tag)) {
+        params.append("tag", tag);
+      }
+    }
+    if (this.#query.text !== "") {
+      params.set("q", this.#query.text);
+    }
+    return params;
+  }
+
+  /** Applies a serialized selection, silently ignoring decks and tags that no longer exist. */
+  withSearchParams(params: URLSearchParams): Filter {
+    const deckParam = params.get("deck") ?? "";
+    let decks = this.#decks.clearSelected();
+    if (this.#decks.has(deckParam)) {
+      decks = decks.select(deckParam);
+    }
+    const tagsParam = new Set(params.getAll("tag"));
+    let tags = this.#tags.clearSelected();
+    for (const tag of tagsParam) {
+      tags = tags.toggleSelected(tag);
+    }
+    return this.withDecks(decks)
+      .withTags(tags)
+      .withQuery({ text: params.get("q") ?? "" });
+  }
+
   withDecks(decks: DeckSet): Filter {
     const filter = new Filter();
     filter.#decks = decks;

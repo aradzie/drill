@@ -41,6 +41,10 @@ export class DeckSet {
     return this.#selected !== "";
   }
 
+  has(path: string): boolean {
+    return this.#options.some((option) => option.path === path);
+  }
+
   select(path: string): DeckSet {
     return new DeckSet(this.#options, path);
   }
