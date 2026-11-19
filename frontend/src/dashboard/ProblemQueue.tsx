@@ -4,7 +4,7 @@ import { EmptyProblemQueue } from "./EmptyProblemQueue.tsx";
 import { ProblemQueueItem } from "./ProblemQueueItem.tsx";
 import styles from "./ProblemQueue.module.css";
 
-export function ProblemQueue({ onSelectProblem }: { onSelectProblem: (problemId: string) => void }) {
+export function ProblemQueue() {
   const { pager, setPager, entries, filter, setFilter } = useFilter();
   if (entries.length === 0) {
     return <EmptyProblemQueue filter={filter} setFilter={setFilter} />;
@@ -14,7 +14,7 @@ export function ProblemQueue({ onSelectProblem }: { onSelectProblem: (problemId:
       <PagerControl pager={pager} onPager={setPager} />
       <ul className={styles.root}>
         {pager.slice(entries).map((entry) => (
-          <ProblemQueueItem key={entry.problem.id} entry={entry} onSelect={() => onSelectProblem(entry.problem.id)} />
+          <ProblemQueueItem key={entry.problem.id} entry={entry} />
         ))}
       </ul>
       <PagerControl pager={pager} onPager={setPager} />

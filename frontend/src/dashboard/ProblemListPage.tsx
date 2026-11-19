@@ -7,6 +7,7 @@ import { SearchFilter } from "../filter/SearchFilter.tsx";
 import { TagsFilter } from "../filter/TagsFilter.tsx";
 import { useFilter } from "../filter/useFilter.ts";
 import { Page } from "../Page.tsx";
+import { problemPath } from "../paths.ts";
 import { Button } from "../ui/Button.tsx";
 import { useHotkey } from "../ui/hotkeys/useHotkey.ts";
 import { FiltersPanel } from "./FiltersPanel.tsx";
@@ -26,15 +27,13 @@ export function ProblemListPage() {
     { id: "reviewed", label: "Reviewed", count: collection["reviewed"].length },
   ];
 
-  const onSelectProblem = (id: string) => navigate(`/problem/${encodeURIComponent(id)}`);
-
   useHotkey(hotkeys.problemList.resetFilters, () => setFilter(filter.reset()));
   useHotkey(
     hotkeys.problemList.randomProblem,
     () => {
       if (entries.length > 0) {
         const entry = entries[Math.floor(Math.random() * entries.length)];
-        onSelectProblem(entry.problem.id);
+        navigate(problemPath(entry.problem.id));
       }
     },
     { enabled: listName === "new" },
@@ -72,7 +71,7 @@ export function ProblemListPage() {
             </Button>
           </div>
         )}
-        <ProblemQueue onSelectProblem={onSelectProblem} />
+        <ProblemQueue />
       </Tabs>
     </Page>
   );
