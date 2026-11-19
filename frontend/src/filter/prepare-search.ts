@@ -2,12 +2,29 @@ import type { Problem, ProblemEntry } from "shared";
 import { extractProse } from "../ui/rich-text/extract-prose.ts";
 import { normalizeSearchText } from "./search.ts";
 
+type Prepared = { tags: string[]; searchFields: string[] };
+
+/**
+ * Parsing every problem's markdown is expensive (hundreds of milliseconds for a few thousand problems), while
+ * the collection is rebuilt whenever a component mounts or an event is recorded. Problem objects are stable
+ * between those rebuilds, so the result is cached per problem and released along with it.
+ */
+const cache = new WeakMap<Problem, Prepared>();
+
 export function prepareSearch(entry: ProblemEntry): ProblemEntry {
-  return {
-    ...entry,
-    tags: expandTags(entry.problem.tags),
-    searchFields: buildSearchFields(entry.problem),
-  };
+  // Cast: the entry's readonly view of the problem is the same object that was loaded.
+  const key = entry.problem as Problem;
+  let prepared = cache.get(key);
+  if (prepared == null) {
+    cache.set(
+      key,
+      (prepared = {
+        tags: expandTags(key.tags),
+        searchFields: buildSearchFields(key),
+      }),
+    );
+  }
+  return { ...entry, ...prepared };
 }
 
 /**
